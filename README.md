@@ -45,25 +45,25 @@ interface resObj {
 
 ```
 listWithSL(reqOptions: reqOptions) {
-		const bs = new BehaviorSubject([]);
+  const bs = new BehaviorSubject([]);
 
-		const next = (skip, limit, baseUrl, auto) => {
-			this._http.get(baseUrl, { params: { skip: skip, limit: limit } })
-				.subscribe((books: resObj) => {
-					bs.next(books.data)
-					skip = (skip + limit);
-					console.log('new skip :', skip)
-					if (auto && (skip < books.records)) {
-						next(skip, limit, baseUrl,auto)
-					}
-				})
-		}
+  const next = (skip, limit, baseUrl, auto) => {
+    this._http.get(baseUrl, { params: { skip: skip, limit: limit } })
+      .subscribe((books: resObj) => {
+        bs.next(books.data)
+        skip = (skip + limit);
+        console.log('new skip :', skip)
+        if (auto && (skip < books.records)) {
+          next(skip, limit, baseUrl,auto)
+        }
+      })
+  }
 
-		next(reqOptions.skip, reqOptions.limit, reqOptions.baseUrl, reqOptions.auto)
-		return bs;
+  next(reqOptions.skip, reqOptions.limit, reqOptions.baseUrl, reqOptions.auto)
+  return bs;
 }
 ```
-```
+
 ```
 this._api.listWithSL({skip:0,limit:5,baseUrl:'http://localhost:3000/books',auto:false})
   .subscribe(books=>{
